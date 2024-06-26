@@ -8,15 +8,15 @@ generator client {
 }
 
 model User {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
   name             String
-  username         String   @unique
-  email            String   @unique
+  username         String    @unique
+  email            String    @unique
   password         String
-  verifyCode       String
-  verifyCodeExpiry DateTime
-  isVerified       Boolean  @default(false)
+  verifyCode       String?
+  verifyCodeExpiry DateTime?
+  isVerified       Boolean   @default(false)
   image            String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }

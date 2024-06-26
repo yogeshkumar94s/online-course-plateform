@@ -1,10 +1,10 @@
 "use client";
 
 import { z } from "zod";
-import { registerSchema } from "@/schemas/auth/registerSchema";
+import { signInSchema } from "@/schemas/auth/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { register } from "@/actions/auth/register";
+import { signIn } from "@/actions/auth/signIn";
 import CardWrapper from "../shared/CardWrapper";
 
 import { Button } from "@/components/ui/button";
@@ -20,18 +20,18 @@ import { Input } from "@/components/ui/input";
 
 const SignUpForm = () => {
   // 1. Define your form.
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof registerSchema>) {
+  function onSubmit(values: z.infer<typeof signInSchema>) {
     // Do something with the form values.
     // This will be type-safe and validated.
-    register(values);
+    signIn(values);
   }
   return (
     <CardWrapper

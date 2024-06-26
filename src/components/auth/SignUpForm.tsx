@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { signUp } from "@/actions/auth/signUp";
 import CardWrapper from "../shared/CardWrapper";
+import { useTransition, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +18,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import FormError from "../formerror/FormError";
+import FormSuccess from "../formerror/FormSuccess";
 
 const SignUpForm = () => {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   // 1. Define your form.
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -30,10 +36,23 @@ const SignUpForm = () => {
     },
   });
 
+  const { reset } = form;
+
   function onSubmit(values: z.infer<typeof signUpSchema>) {
+    setError("");
+    setSuccess("");
     // Do something with the form values.
     // This will be type-safe and validated.
-    signUp(values);
+    startTransition(() => {
+      signUp(values).then((data) => {
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setSuccess(data.success);
+          reset(); // Reset the form fields upon successful submission
+        }
+      });
+    });
   }
   return (
     <CardWrapper
@@ -50,7 +69,11 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Ajay Kumar' {...field} />
+                  <Input
+                    placeholder='Ajay Kumar'
+                    {...field}
+                    disabled={isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -63,7 +86,7 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder='Ajayk' {...field} />
+                  <Input placeholder='Ajayk' {...field} disabled={isPending} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -76,7 +99,11 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='ajay@gmail.com' {...field} />
+                  <Input
+                    placeholder='ajay@gmail.com'
+                    {...field}
+                    disabled={isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -89,13 +116,17 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder='******' {...field} />
+                  <Input placeholder='******' {...field} disabled={isPending} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type='submit'>Submit</Button>
+          <FormError message={error} />
+          <FormSuccess message={success} />
+          <Button type='submit' disabled={isPending}>
+            Submit
+          </Button>
         </form>
       </Form>
     </CardWrapper>
