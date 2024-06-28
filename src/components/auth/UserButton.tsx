@@ -1,37 +1,41 @@
 "use client";
 
 import { FaUser } from "react-icons/fa";
-import { ExitIcon } from "@radix-ui/react-icons";
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import SignOutButton from "./SignOutButton";
 
 const UserButton = () => {
   const user = useCurrentUser();
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Avatar>
-          <AvatarImage src={user?.image || ""} />
-          <AvatarFallback className='bg-sky-500'>
+    <>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Avatar>
+            <AvatarImage src={user?.image || ""} />
             <FaUser className='text-white' />
-          </AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className='w-40' align='end'>
-        <DropdownMenuItem>
-          <ExitIcon className='h-4 w-4 mr-2' />
-          Logout
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          </Avatar>
+        </PopoverTrigger>
+
+        <PopoverContent className='w-80 h-[200px]'>
+          <div className='flex flex-col gap-2 items-center'>
+            <h2>{user?.name}</h2>
+            <p>{user?.email}</p>
+          </div>
+          <div className='mt-[90px] ml-28'>
+            <SignOutButton>Logout</SignOutButton>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </>
   );
 };
 

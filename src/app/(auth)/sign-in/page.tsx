@@ -1,7 +1,7 @@
-import SignInForm from "@/components/auth/SignInForm";
+import SignInCard from "@/components/auth/SignInCard";
 
 const SignInPage = () => {
-  return <SignInForm />;
+  return <SignInCard />;
 };
 
 export default SignInPage;

@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { auth } from "@/auth";
+import UserButton from "../auth/UserButton";
 
-const Header = () => {
+const Header = async () => {
+  const session = await auth();
   return (
     <header>
       <div className='container mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4'>
@@ -32,14 +35,20 @@ const Header = () => {
         </nav>
 
         {/* User Actions */}
-        <div className='flex items-center pl-3'>
-          <Link href='/sign-in' className=''>
-            Login
-          </Link>
-          <Link href='/sign-up' className='  px-2 py-2 rounded-md '>
-            Register
-          </Link>
-        </div>
+        {!session?.user ? (
+          <div className='flex items-center pl-3'>
+            <Link href='/sign-in' className=''>
+              Login
+            </Link>
+            <Link href='/sign-in' className='  px-2 py-2 rounded-md '>
+              Register
+            </Link>
+          </div>
+        ) : (
+          <div className='ml-6'>
+            <UserButton />
+          </div>
+        )}
       </div>
     </header>
   );
